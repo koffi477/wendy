@@ -1,0 +1,203 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wendy, Be My Valentine?</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Floating hearts */
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    transform: rotate(45deg);
+    animation: float 8s linear infinite;
+}
+
+.heart::before,
+.heart::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.heart::before {
+    top: -10px;
+    left: 0;
+}
+
+.heart::after {
+    left: -10px;
+    top: 0;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(255, 0, 100, 0.5);
+    max-width: 400px;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    color: #ff4d6d;
+}
+
+p {
+    font-size: 18px;
+    color: #444;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+}
+
+#yesBtn:hover {
+    background-color: #ff1e56;
+}
+
+#noBtn {
+    background-color: #ccc;
+    position: absolute;
+}
+
+.hidden {
+    display: none;
+}
+
+.love-message {
+    font-size: 20px;
+    color: #ff4d6d;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
+
+<div class="container">
+    <h1>Wendy Owusu 💖</h1>
+    <p>Will you be my Valentine?</p>
+    <button id="yesBtn">Yes 💕</button>
+    <button id="noBtn">No 😅</button>
+    <div id="finalMessage" class="hidden love-message"></div>
+</div>
+
+<script>
+// Floating hearts generator
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 5) + "s";
+    heart.style.opacity = Math.random();
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}
+
+setInterval(createHeart, 300);
+
+// Button logic
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const finalMessage = document.getElementById("finalMessage");
+const container = document.querySelector(".container");
+
+let moveCount = 0;
+
+noBtn.addEventListener("mouseover", () => {
+    moveCount++;
+
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const maxX = container.clientWidth - btnRect.width - 20;
+    const maxY = container.clientHeight - btnRect.height - 20;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    if (moveCount >= 5) {
+        finalMessage.classList.remove("hidden");
+        finalMessage.innerHTML = `
+            You really tried to say no? 😏💘<br><br>
+            Wendy, you can't say no because you owe me 10 children 👶😂<br><br>
+            But truly… you are my heart, my joy, my forever.<br>
+            I choose you today, tomorrow, and always. 💖
+        `;
+        noBtn.style.display = "none";
+    }
+});
+
+yesBtn.addEventListener("click", () => {
+    finalMessage.classList.remove("hidden");
+    finalMessage.innerHTML = `
+        Yaaaaay!!! 🎉💖<br><br>
+        You just made me the happiest person alive!<br>
+        Wendy Owusu, I promise to love you,
+        spoil you, annoy you, and cherish you forever. 💍💕<br><br>
+        Happy Valentine, my love!
+    `;
+    noBtn.style.display = "none";
+    yesBtn.style.display = "none";
+});
+
+// Fix autoplay issue for some browsers
+document.body.addEventListener("click", function() {
+    document.getElementById("bgMusic").play();
+});
+</script>
